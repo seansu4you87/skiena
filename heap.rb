@@ -56,6 +56,7 @@ class Heap
   end
 
   def dominant(a, b)
+    return [nil, :none] if a.nil? && b.nil?
     return [a, :left] if b.nil?
     return [b, :right] if a.nil?
 
@@ -83,6 +84,8 @@ class Heap
     left = @data[left_child(index)]
     right = @data[right_child(index)]
     dom, side = dominant(left, right)
+
+    return if dom.nil? && side == :none
 
     if dominates?(dom, @data[index])
       tmp = @data[index]

@@ -2,8 +2,9 @@ require 'benchmark'
 
 require_relative 'linked_list'
 require_relative 'binary_search_tree'
+require_relative 'heap'
 
-def benchmark_dictionary(klass, sizes, big_o)
+def benchmark_data_structure(klass, sizes, methods)
   ds = {}
 
   sizes.each do |size|
@@ -18,41 +19,41 @@ def benchmark_dictionary(klass, sizes, big_o)
   end
 
   Benchmark.bm 30 do |bm|
-    benchmark_dictionary_method(bm, "Insert      #{big_o['Insert']}", ds) { |d, size| d.insert size/2 }
-    benchmark_dictionary_method(bm, "Search      #{big_o['Search']}", ds) { |d, size| d.search (size/2) }
-    benchmark_dictionary_method(bm, "Delete      #{big_o['Delete']}", ds) { |d, size| d.delete (size/2) }
-    benchmark_dictionary_method(bm, "Maximum     #{big_o['Maximum']}", ds) { |d, size| d.max }
-    benchmark_dictionary_method(bm, "Minimum     #{big_o['Minimum']}", ds) { |d, size| d.min }
-    benchmark_dictionary_method(bm, "Predecessor #{big_o['Predecessor']}", ds) { |d, size| d.predecessor(size/2) }
-    benchmark_dictionary_method(bm, "Successor   #{big_o['Successor']}", ds) { |d, size| d.successor(size/2) }
+    methods.each do |key, value|
+      blk, big_o = value
+      title = "#{key.ljust 15} #{big_o}"
+
+      benchmark_data_structure_method(bm, title, ds, &blk)
+    end
   end
 end
 
-def benchmark_dictionary_method(bm, title, ds, &blk)
+def benchmark_data_structure_method(bm, title, ds, &blk)
   puts "\n"
   puts title
   puts "\n"
   ds.each do |d, size|
-    bm.report format_number(size) do
+    bm.report format_number(size).rjust(20) do
       blk.call(d, size)
     end
   end
 end
 
 def format_number(number)
-  formatted_number = number.to_s.reverse.gsub(/(\d{3})(?=\d)/, '\\1,').reverse
-  formatted_number.rjust(20)
+  number.to_s.reverse.gsub(/(\d{3})(?=\d)/, '\\1,').reverse
 end
 
-linked_list_sizes = [
-  10,
-  100,
-  1_000,
-  10_000,
-  100_000,
-  1_000_000,
-  10_000_000,
-]
+# BENCHMARK!!!
+
+dictionary_methods = {
+  "Insert"      => (lambda { |d, size| d.insert (size/2) }),
+  "Search"      => (lambda { |d, size| d.search (size/2) }),
+  "Delete"      => (lambda { |d, size| d.delete (size/2) }),
+  "Maximum"     => (lambda { |d, size| d.max }),
+  "Minimum"     => (lambda { |d, size| d.min }),
+  "Predecessor" => (lambda { |d, size| d.predecessor (size/2) }),
+  "Successor"   => (lambda { |d, size| d.successor (size/2) }),
+}
 
 linked_list_big_o = {
   "Insert"      => "O(1)",
@@ -64,16 +65,6 @@ linked_list_big_o = {
   "Successor"   => "O(n)",
 }
 
-binary_search_tree_sizes = [
-  10,
-  100,
-  1_000,
-  10_000,
-  100_000,
-  1_000_000,
-  # 10_000_000, # takes ~7mins to load all the inserts
-]
-
 binary_search_tree_big_o = {
   "Insert"      => "O(h)",
   "Search"      => "O(n) =[",
@@ -84,21 +75,30 @@ binary_search_tree_big_o = {
   "Successor"   => "O(h)",
 }
 
-# benchmark_dictionary(LinkedList::Dictionary, linked_list_sizes, linked_list_big_o)
-benchmark_dictionary(BinarySearchTree::Dictionary, binary_search_tree_sizes, binary_search_tree_big_o)
+sizes = [
+  10,
+  100,
+  1_000,
+  10_000,
+  100_000,
+  # 1_000_000,
+  # 10_000_000,
+]
 
-# Benchmark.bm 30 do |bm|
-#   d = BinarySearchTree::Dictionary.new
+benchmark_data_structure(
+  LinkedList::Dictionary,
+  sizes,
+  dictionary_methods.merge(linked_list_big_o) { |key, old, new| [old, new] }
+)
 
-#   binary_search_tree_sizes.each do |size|
-#     count = 0
-#     bm.report format_number(size).to_s.rjust(20) do
-#       (1..size).to_a.shuffle.each do |i|
-#         # bm.report count.to_s.rjust(20) do
-#           d.insert i
-#           count += 1
-#         # end
-#       end
-#     end
-#   end
-# end
+# benchmark_data_structure(
+#   BinarySearchTree::Dictionary,
+#   sizes,
+#   dictionary_methods.merge(binary_search_tree_big_o) { |key, old, new| [old, new] }
+# )
+
+heap_methods = {
+  "Insert"  => [(lambda { |d, size| d.insert (size/2) }), "O(h) ???"],
+  "Extract" => [(lambda { |d, size| d.extract }),         "O(h) ???"],
+}
+benchmark_data_structure(Heap, sizes, heap_methods)
