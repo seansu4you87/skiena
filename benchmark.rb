@@ -3,9 +3,12 @@ require 'benchmark'
 require_relative 'linked_list'
 require_relative 'binary_search_tree'
 require_relative 'heap'
+require_relative 'priority_queue'
 
-def benchmark_data_structure(klass, sizes, methods)
+def benchmark_data_structure(klass, sizes, methods, opts = {})
   ds = {}
+
+  build_method = opts[:build_method] || :insert
 
   sizes.each do |size|
     d = klass.new
@@ -14,7 +17,7 @@ def benchmark_data_structure(klass, sizes, methods)
 
   ds.each do |d, size|
     (1...size).to_a.shuffle.each do |i|
-      d.insert i
+      d.send(build_method, i)
     end
   end
 
@@ -81,15 +84,15 @@ sizes = [
   1_000,
   10_000,
   100_000,
-  # 1_000_000,
+  1_000_000,
   # 10_000_000,
 ]
 
-benchmark_data_structure(
-  LinkedList::Dictionary,
-  sizes,
-  dictionary_methods.merge(linked_list_big_o) { |key, old, new| [old, new] }
-)
+# benchmark_data_structure(
+#   LinkedList::Dictionary,
+#   sizes,
+#   dictionary_methods.merge(linked_list_big_o) { |key, old, new| [old, new] }
+# )
 
 # benchmark_data_structure(
 #   BinarySearchTree::Dictionary,
@@ -98,7 +101,14 @@ benchmark_data_structure(
 # )
 
 heap_methods = {
-  "Insert"  => [(lambda { |d, size| d.insert (size/2) }), "O(h) ???"],
-  "Extract" => [(lambda { |d, size| d.extract }),         "O(h) ???"],
+  "Insert"  => [(lambda { |d, size| d.insert (size/2) }), "O(h)"],
+  "Extract" => [(lambda { |d, size| d.extract }),         "O(h)"],
 }
-benchmark_data_structure(Heap, sizes, heap_methods)
+# benchmark_data_structure(Heap, sizes, heap_methods)
+
+priority_queue_methods = {
+  "Push" => [(lambda { |d, size| d.push (size/2) }), "O(h)"],
+  "Pop"  => [(lambda { |d, size| d.pop }),           "O(h)"],
+  "Peek" => [(lambda { |d, size| d.peek }),          "O(1)"],
+}
+benchmark_data_structure(PriorityQueue, sizes, priority_queue_methods, build_method: :push)

@@ -19,7 +19,7 @@ class PriorityQueue
     @heap = Heap.new(&@dominator)
   end
 
-  def push(key, value)
+  def push(key, value = key)
     @heap.insert(Node.new(key, value))
   end
 
