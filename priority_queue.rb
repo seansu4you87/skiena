@@ -14,8 +14,9 @@ class PriorityQueue
     end
   end
 
-  def initialize
-    @heap = Heap.new { |a, b| a.key < b.key }
+  def initialize(&blk)
+    @dominator = blk || (lambda { |a, b| a.key < b.key })
+    @heap = Heap.new(&@dominator)
   end
 
   def push(key, value)
