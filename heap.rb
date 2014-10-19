@@ -1,17 +1,14 @@
 class Heap
   class << self
-    def heapify(array)
-    end
-
-    def merge(a, b)
-    end
-
-    def meld(a, b)
-    end
+    def heapify(array); end
+    def merge(a, b); end
+    def meld(a, b); end
   end
-  def initialize
+
+  def initialize(&blk)
     @data = []
     @size = 0
+    @dominator = blk || (lambda { |a,b| a < b })
   end
 
   def peek
@@ -52,7 +49,7 @@ class Heap
   private
 
   def dominates?(a, b)
-    a < b # min heap domination
+    @dominator.call(a, b)
   end
 
   def dominant(a, b)
