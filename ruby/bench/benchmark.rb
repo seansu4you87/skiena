@@ -6,57 +6,21 @@ require_relative '../lib/lego'
 
 # BENCHMARK!!!
 
-# Analysis.dictionary_ll.run [
-#   10,
-#   100,
-#   1_000,
-#   10_000,
-#   100_000,
-#   # 1_000_000,
-#   # 10_000_000,
-# ]
-
-# Analysis.dictionary_bst.run [
-#   10,
-#   100,
-#   1_000,
-#   10_000,
-#   100_000,
-#   # 1_000_000, # takes 8 seconds
-#   # 10_000_000, # takes like 7 fucking minutes!
-# ]
-
-# Analysis.heap.run [
-#   10,
-#   100,
-#   1_000,
-#   10_000,
-#   100_000,
-#   # 1_000_000,
-#   # 10_000_000, # 27 seconds
-#   # 100_000_000, # 4.5 minutes (270 seconds)
-# ]
-
-# Analysis.priority_queue.run [
-#   10,
-#   100,
-#   1_000,
-#   10_000,
-#   # 100_000,
-#   # 1_000_000,
-#   # 10_000_000,
-# ]
-
 sizes = [
   10,
   100,
   1_000,
   10_000,
-  # 100_000,
-  # 1_000_000,
+  100_000,
+  1_000_000,
   # 10_000_000,
   # 100_000_000,
 ]
+
+# Analysis.dictionary_ll.run sizes
+# Analysis.dictionary_bst.run sizes # (1_000_000, 8 sec), (10_000_000, 7 min)
+# Analysis.heap.run sizes # (10_000_000, 27 sec), (100_000_000, 4.5 min/270 sec)
+# Analysis.priority_queue.run sizes
 
 # TODO(yu): compare specific methods on different Analysis objects
 # method_name = "Insert"
