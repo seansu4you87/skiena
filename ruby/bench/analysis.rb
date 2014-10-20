@@ -48,10 +48,12 @@ class Analysis
       pq
     end
 
-    def sort
-      Analysis.new(Array, "O(n) for array creation") do |array, size|
+    def sort(&blk)
+      blk ||= lambda do |array, size|
         (1...size).to_a.shuffle.each { |i| array << i }
       end
+
+      Analysis.new(Array, "O(n) for array creation", &blk)
     end
 
     def heap_sort
@@ -66,11 +68,15 @@ class Analysis
       m
     end
 
-    def quicksort
-      q = sort
-      # q = Analysis.new(Array, "O(n) for array creation") do |array, size|
-      #   (1...size).to_a.each { |i| array << i }
-      # end
+    def quicksort(opts = {})
+      if opts[:sorted]
+        q = sort do |array, size|
+          (1...size).to_a.each { |i| array << i }
+        end
+      else
+        q = sort
+      end
+
       q << Analysis::Method.new("Quicksort", "O(n logn) randomized)") { |array, _| Abacus::Quicksort.sort(array.dup) }
       q
     end

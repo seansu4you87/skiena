@@ -27,7 +27,8 @@ sizes = [
 # ll.run(sizes, method_name)
 # bst.run(sizes, method_name)
 
-Analysis.heap_sort.run sizes, silence_creation: true
-Analysis.merge_sort.run sizes, silence_creation: true
+# Analysis.heap_sort.run sizes, silence_creation: true
+# Analysis.merge_sort.run sizes, silence_creation: true
 Analysis.quicksort.run sizes, silence_creation: true
-Analysis.ruby_sort.run sizes, silence_creation: true
+Analysis.quicksort(sorted: true).run sizes, silence_creation: true
+# Analysis.ruby_sort.run sizes, silence_creation: true

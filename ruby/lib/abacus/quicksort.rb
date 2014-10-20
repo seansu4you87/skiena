@@ -5,6 +5,8 @@ module Abacus::Quicksort
     return [] if data.nil?
     return data if data.length == 0
 
+    data = data.shuffle # without randomization, quicksort can really suck
+
     pivot = data.shift
     lte = [] # less than or equal
     mt = []  # more than
