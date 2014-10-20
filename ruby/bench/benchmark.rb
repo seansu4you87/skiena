@@ -14,13 +14,17 @@ sizes = [
   100_000,
   1_000_000,
   10_000_000,
- 100_000_000,
+  # 100_000_000,
 ]
+
+def scale(n, sizes)
+  sizes.map { |s| n * s }
+end
 
 # Analysis.dictionary_ll.run sizes
 # Analysis.dictionary_bst.run sizes # (1_000_000, 8 sec), (10_000_000, 7 min)
-Analysis.heap.run sizes # (10_000_000, 27 sec), (100_000_000, 4.5 min/270 sec)
-Analysis.heap(heapify: true).run sizes
+Analysis.heap.run scale(2, sizes) # (10_000_000, 27 sec), (100_000_000, 4.5 min/270 sec)
+Analysis.heap(heapify: true).run scale(2, sizes)
 # Analysis.priority_queue.run sizes
 
 # TODO(yu): compare specific methods on different Analysis objects
