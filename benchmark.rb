@@ -5,78 +5,130 @@ require_relative 'binary_search_tree'
 require_relative 'heap'
 require_relative 'priority_queue'
 
-def benchmark_data_structure(klass, sizes, methods, opts = {})
-  ds = {}
+class Analysis
+  class Method
+    attr_reader :name, :big_o, :blk
 
-  build_method = opts[:build_method] || :insert
-
-  sizes.each do |size|
-    d = klass.new
-    ds[d] = size
-  end
-
-  ds.each do |d, size|
-    (1...size).to_a.shuffle.each do |i|
-      d.send(build_method, i)
+    def initialize(name, big_o, &blk)
+      @name = name
+      @big_o = big_o
+      @blk = blk
     end
   end
 
-  Benchmark.bm 30 do |bm|
-    methods.each do |key, value|
-      blk, big_o = value
-      title = "#{key.ljust 15} #{big_o}"
+  def initialize(klass, creation_big_o, &creation_blk)
+    @klass = klass
 
-      benchmark_data_structure_method(bm, title, ds, &blk)
+    @creation_method = Method.new("Creation", creation_big_o, &creation_blk)
+    @methods = []
+  end
+
+  def <<(method)
+    @methods << method
+  end
+
+  def run(sizes, method_name = nil)
+    ds = {}
+    sizes.each do |size|
+      d = @klass.new
+      ds[d] = size
+    end
+
+    Benchmark.bm 30 do |bm|
+      run_method(@creation_method, ds, bm)
+      @methods.each { |method| run_method(method, ds, bm) }
     end
   end
-end
 
-def benchmark_data_structure_method(bm, title, ds, &blk)
-  puts "\n"
-  puts title
-  puts "\n"
-  ds.each do |d, size|
-    bm.report format_number(size).rjust(20) do
-      blk.call(d, size)
+  def run_method(method, ds, bm)
+    puts "\n#{method.name.ljust 15} #{method.big_o}\n\n"
+    ds.each do |d, size|
+      bm.report(format_size(size)) { method.blk.call(d, size) }
     end
   end
-end
 
-def format_number(number)
-  number.to_s.reverse.gsub(/(\d{3})(?=\d)/, '\\1,').reverse
+  private
+
+  def format_size(size)
+    size.to_s.reverse.gsub(/(\d{3})(?=\d)/, '\\1,').reverse.rjust(20)
+  end
 end
 
 # BENCHMARK!!!
 
-dictionary_methods = {
-  "Insert"      => (lambda { |d, size| d.insert (size/2) }),
-  "Search"      => (lambda { |d, size| d.search (size/2) }),
-  "Delete"      => (lambda { |d, size| d.delete (size/2) }),
-  "Maximum"     => (lambda { |d, size| d.max }),
-  "Minimum"     => (lambda { |d, size| d.min }),
-  "Predecessor" => (lambda { |d, size| d.predecessor (size/2) }),
-  "Successor"   => (lambda { |d, size| d.successor (size/2) }),
-}
+ll = Analysis.new(LinkedList::Dictionary, "O(n)") do |d, size|
+  (1...size).to_a.shuffle.each { |i| d.insert i }
+end
 
-linked_list_big_o = {
-  "Insert"      => "O(1)",
-  "Search"      => "O(n)",
-  "Delete"      => "O(n)",
-  "Maximum"     => "O(1)",
-  "Minimum"     => "O(1)",
-  "Predecessor" => "O(n)",
-  "Successor"   => "O(n)",
-}
+ll << Analysis::Method.new("Insert", "O(1)") { |d, size| d.insert (size/2) }
+ll << Analysis::Method.new("Search", "O(n)") { |d, size| d.search (size/2) }
+ll << Analysis::Method.new("Delete", "O(n)") { |d, size| d.delete (size/2) }
+ll << Analysis::Method.new("Maximum", "O(1)") { |d, size| d.max }
+ll << Analysis::Method.new("Minimum", "O(1)") { |d, size| d.min }
+ll << Analysis::Method.new("Predecessor", "O(n)") { |d, size| d.predecessor (size/2) }
+ll << Analysis::Method.new("Successor", "O(n)") { |d, size| d.successor (size/2) }
+# ll.run [
+#   10,
+#   100,
+#   1_000,
+#   10_000,
+#   100_000,
+#   1_000_000,
+#   10_000_000,
+# ]
 
-binary_search_tree_big_o = {
-  "Insert"      => "O(h)",
-  "Search"      => "O(n) =[",
-  "Delete"      => "O(h)",
-  "Maximum"     => "O(1)",
-  "Minimum"     => "O(1)",
-  "Predecessor" => "O(h)",
-  "Successor"   => "O(h)",
-}
+bst = Analysis.new(BinarySearchTree::Dictionary, "O(n logn)") do |d, size|
+  (1...size).to_a.shuffle.each { |i| d.insert i }
+end
+bst << Analysis::Method.new("Insert", "O(h)") { |d, size| d.insert (size/2) }
+bst << Analysis::Method.new("Search", "O(n) =[, could be better") { |d, size| d.search (size/2) }
+bst << Analysis::Method.new("Delete", "O(h)") { |d, size| d.delete (size/2) }
+bst << Analysis::Method.new("Maximum", "O(1)") { |d, size| d.max }
+bst << Analysis::Method.new("Minimum", "O(1)") { |d, size| d.min }
+bst << Analysis::Method.new("Predecessor", "O(h)") { |d, size| d.predecessor (size/2) }
+bst << Analysis::Method.new("Successor", "O(h)") { |d, size| d.successor (size/2) }
+# bst.run [
+#   10,
+#   100,
+#   1_000,
+#   10_000,
+#   100_000,
+#   # 1_000_000, # takes 8 seconds
+#   # 10_000_000, # takes like 7 fucking minutes!
+# ]
+
+h = Analysis.new(Heap, "O(n logn) ???") do |d, size|
+  (1...size).to_a.shuffle.each { |i| d.insert i }
+end
+h << Analysis::Method.new("Insert", "O(h)") { |d, size| d.insert (size/2) }
+h << Analysis::Method.new("Extract", "O(h)") { |d, size| d.extract }
+h.run [
+  10,
+  100,
+  1_000,
+  10_000,
+  100_000,
+  # 1_000_000,
+  # 10_000_000, # 27 seconds
+  # 100_000_000, # 4.5 minutes (270 seconds)
+]
+
+
+pq = Analysis.new(PriorityQueue, "O(n logn) ???") do |d, size|
+  (1...size).to_a.shuffle.each { |i| d.push i }
+end
+pq << Analysis::Method.new("Push", "O(h)") { |d, size| d.push (size/2) }
+pq << Analysis::Method.new("Pop", "O(h)") { |d, size| d.pop }
+pq << Analysis::Method.new("Peek", "O(1)") { |d, size| d.peek }
+# pq.run [
+#   10,
+#   100,
+#   1_000,
+#   10_000,
+#   100_000,
+#   1_000_000,
+#   10_000_000,
+# ]
 
 sizes = [
   10,
@@ -85,30 +137,10 @@ sizes = [
   10_000,
   100_000,
   1_000_000,
-  # 10_000_000,
+  # 10_000_000, # 26 seconds
+  # 100_000_000, # ???
 ]
 
-# benchmark_data_structure(
-#   LinkedList::Dictionary,
-#   sizes,
-#   dictionary_methods.merge(linked_list_big_o) { |key, old, new| [old, new] }
-# )
-
-# benchmark_data_structure(
-#   BinarySearchTree::Dictionary,
-#   sizes,
-#   dictionary_methods.merge(binary_search_tree_big_o) { |key, old, new| [old, new] }
-# )
-
-heap_methods = {
-  "Insert"  => [(lambda { |d, size| d.insert (size/2) }), "O(h)"],
-  "Extract" => [(lambda { |d, size| d.extract }),         "O(h)"],
-}
-# benchmark_data_structure(Heap, sizes, heap_methods)
-
-priority_queue_methods = {
-  "Push" => [(lambda { |d, size| d.push (size/2) }), "O(h)"],
-  "Pop"  => [(lambda { |d, size| d.pop }),           "O(h)"],
-  "Peek" => [(lambda { |d, size| d.peek }),          "O(1)"],
-}
-benchmark_data_structure(PriorityQueue, sizes, priority_queue_methods, build_method: :push)
+# method_name = "Insert"
+# ll.run(sizes, method_name)
+# bst.run(sizes, method_name)
