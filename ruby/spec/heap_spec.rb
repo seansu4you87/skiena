@@ -1,4 +1,4 @@
-require_relative "heap"
+require 'spec_helper'
 
 describe Heap do
   describe '#insert' do

@@ -1,4 +1,4 @@
-require_relative "binary_search_tree"
+require 'spec_helper'
 
 describe BinarySearchTree do
   let(:to_s) do

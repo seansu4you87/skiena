@@ -1,4 +1,4 @@
-require_relative "linked_list"
+require 'spec_helper'
 
 describe LinkedList do
   let(:third) { LinkedList.new(3, nil) }

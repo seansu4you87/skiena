@@ -1,4 +1,4 @@
-require_relative 'insertion_sort'
+require 'spec_helper'
 
 describe InsertionSort do
   describe '#sort' do

@@ -1,4 +1,4 @@
-require_relative 'priority_queue'
+require 'spec_helper'
 
 describe PriorityQueue do
   let(:pq) { PriorityQueue.new }
