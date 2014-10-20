@@ -29,10 +29,23 @@ class Analysis
       bst
     end
 
-    def heap
-      h = Analysis.new(Lego::Heap, "O(n logn) ???") do |d, size|
-        (1...size).to_a.shuffle.each { |i| d.insert i }
+    def heap(opts = {})
+      if opts[:heapify]
+        big_o = "O(n)"
+      else
+        big_o = "O(n log n) ?, seems to run in O(n)"
       end
+
+      h = Analysis.new(Lego::Heap, big_o) do |heap, size|
+        data = (1...size).to_a.shuffle
+
+        if opts[:heapify]
+          heap.send(:heapify, data)
+        else
+          data.each { |i| heap.insert i }
+        end
+      end
+
       h << Analysis::Method.new("Insert", "O(h)") { |d, size| d.insert (size/2) }
       h << Analysis::Method.new("Extract", "O(h)") { |d, size| d.extract }
       h

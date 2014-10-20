@@ -1,6 +1,22 @@
 require 'spec_helper'
 
 describe Lego::Heap do
+  describe '#heapify' do
+    it "efficiently creates a heap from an array" do
+      # sorted
+      expect(Lego::Heap.new([1, 2, 3, 4, 5]).to_s).to eql "1, 2, 3, 4, 5"
+      expect(Lego::Heap.new([1, 2, 3, 4, 5, 6]).to_s).to eql "1, 2, 3, 4, 5, 6"
+
+      # reverse sorted
+      expect(Lego::Heap.new([5, 4, 3, 2, 1]).to_s).to eql "1, 2, 3, 5, 4"
+      expect(Lego::Heap.new([6, 5, 4, 3, 2, 1]).to_s).to eql "1, 2, 4, 3, 5, 6"
+
+      # random
+      expect(Lego::Heap.new([2, 4, 3, 1, 5]).to_s).to eql "1, 2, 3, 4, 5"
+      expect(Lego::Heap.new([2, 4, 3, 6, 1, 5]).to_s).to eql "1, 2, 3, 6, 4, 5"
+    end
+  end
+
   describe '#insert' do
     it "inserts" do
       h = Lego::Heap.new

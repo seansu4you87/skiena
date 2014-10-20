@@ -1,20 +1,30 @@
 class Lego::Heap
-  class << self
-    def heapify(array); end
-    def merge(a, b); end
-    def meld(a, b); end
-  end
-
-  def initialize(&blk)
-    @data = []
+  def initialize(data = nil, &blk)
     @size = 0
     @dominator = blk || (lambda { |a,b| a < b })
+    @data = []
+
+    if !data.nil? && !data.empty?
+      heapify(data)
+    end
   end
+
+  def heapify(data)
+    @size = data.size
+    @data = data.dup.unshift nil # we are 1-indexed on the heap
+
+    leaf_count = (@size/2.0).ceil
+    while leaf_count > 0 do
+      bubble_down(leaf_count)
+      leaf_count -= 1
+    end
+  end
+  private :heapify
 
   def insert(key)
     # append to the end of the array, bubble up
-    @data[@size + 1] = key
     @size += 1
+    @data[@size] = key
     bubble_up(@size)
   end
   alias_method :<<, :insert
