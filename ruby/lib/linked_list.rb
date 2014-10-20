@@ -82,6 +82,17 @@ class LinkedList
         return nil
       end
     end
+
+    def reverse(head, before = nil)
+      tail = head.next
+      head.next = before
+
+      if tail.nil?
+        head
+      else
+        reverse(tail, head)
+      end
+    end
   end
 
   # Dictionary implemented with an unsorted LinkedList
