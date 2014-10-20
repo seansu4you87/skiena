@@ -1,4 +1,4 @@
-module InsertionSort
+module Abacus::InsertionSort
   extend self
 
   def sort(data)

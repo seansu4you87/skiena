@@ -1,8 +1,8 @@
 require 'spec_helper'
 
-describe InsertionSort do
+describe Abacus::InsertionSort do
   describe '#sort' do
-    subject { InsertionSort.sort(data) }
+    subject { Abacus::InsertionSort.sort(data) }
 
     let(:data) { [4, 5, 2, 3, 1] }
     it "sorts!" do

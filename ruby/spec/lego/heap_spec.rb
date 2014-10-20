@@ -1,9 +1,9 @@
 require 'spec_helper'
 
-describe Heap do
+describe Lego::Heap do
   describe '#insert' do
     it "inserts" do
-      h = Heap.new
+      h = Lego::Heap.new
       h.insert 5  # 5
       h.insert 3  # 5, 3 -> 3, 5
       h.insert 4  # 3, 5, 4
@@ -15,7 +15,7 @@ describe Heap do
 
   describe "#extract" do
     it "extracts the most dominant member" do
-      h = Heap.new
+      h = Lego::Heap.new
       h.insert 5
       h.insert 3
       h.insert 4

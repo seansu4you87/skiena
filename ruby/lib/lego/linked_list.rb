@@ -1,4 +1,4 @@
-class LinkedList
+class Lego::LinkedList
   class Error < StandardError; end
   class OutOfBoundsError < Error; end
 
@@ -23,7 +23,7 @@ class LinkedList
       node = head
       i.times do
         node = node.next
-        raise LinkedList::OutOfBoundsError if node.nil?
+        raise Lego::LinkedList::OutOfBoundsError if node.nil?
       end
       node
     end
@@ -95,8 +95,8 @@ class LinkedList
     end
   end
 
-  # Dictionary implemented with an unsorted LinkedList
-  # Key will be the index into the LinkedList
+  # Dictionary implemented with an unsorted Lego::LinkedList
+  # Key will be the index into the Lego::LinkedList
   class Dictionary
     def initialize
       @_head = nil
@@ -106,17 +106,17 @@ class LinkedList
 
     # O(n)
     def search(k)
-      LinkedList.index(@_head, k).value
+      Lego::LinkedList.index(@_head, k).value
     end
 
     # O(1)
     def insert(x)
       if @_head.nil?
-        @_head = LinkedList.new(x, nil)
+        @_head = Lego::LinkedList.new(x, nil)
         @_max = @_head
         @_min = @_head
       else
-        new_head = LinkedList.new(x, @_head)
+        new_head = Lego::LinkedList.new(x, @_head)
         @_head = new_head
 
         if x > @_max.value
@@ -131,7 +131,7 @@ class LinkedList
 
     # O(n)
     def delete(x)
-      @_head = LinkedList.delete_value(@_head, x)
+      @_head = Lego::LinkedList.delete_value(@_head, x)
 
       @_max = @_head
       @_min = @_head

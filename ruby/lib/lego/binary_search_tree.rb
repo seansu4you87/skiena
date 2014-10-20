@@ -1,4 +1,4 @@
-class BinarySearchTree
+class Lego::BinarySearchTree
   attr_accessor :value, :left, :right, :parent
 
   def initialize(value, left, right)
@@ -84,20 +84,20 @@ class BinarySearchTree
     def insert(root, value)
       if value < root.value
         if root.left.nil?
-          node = BinarySearchTree.new(value, nil, nil)
+          node = Lego::BinarySearchTree.new(value, nil, nil)
           root.left = node
         else
           insert(root.left, value)
         end
       elsif value > root.value
         if root.right.nil?
-          node = BinarySearchTree.new(value, nil, nil)
+          node = Lego::BinarySearchTree.new(value, nil, nil)
           root.right = node
         else
           insert(root.right, value)
         end
       else # if equal, insert to the right
-        node = BinarySearchTree.new(value, nil, nil)
+        node = Lego::BinarySearchTree.new(value, nil, nil)
         old_right = root.right
         root.right = node
         node.right = old_right
@@ -176,7 +176,7 @@ class BinarySearchTree
     end
   end
 
-  # Dictionary implemented with a BinarySearchTree
+  # Dictionary implemented with a Lego::BinarySearchTree
   # Key will be the sorted index
   class Dictionary
     def initialize
@@ -188,7 +188,7 @@ class BinarySearchTree
     # O(h)
     def search(k)
       count = 0
-      BinarySearchTree.traverse(@_root) do |value|
+      Lego::BinarySearchTree.traverse(@_root) do |value|
         return value if count == k
         count += 1
       end
@@ -197,11 +197,11 @@ class BinarySearchTree
     # O(h)
     def insert(x)
       if @_root == nil
-        @_root = BinarySearchTree.new(x, nil, nil)
+        @_root = Lego::BinarySearchTree.new(x, nil, nil)
         @_max = x
         @_min = x
       else
-        BinarySearchTree.insert(@_root, x)
+        Lego::BinarySearchTree.insert(@_root, x)
         if x > @_max
           @_max = x
         end
@@ -214,9 +214,9 @@ class BinarySearchTree
 
     # O(h)
     def delete(x)
-      BinarySearchTree.delete(@_root, x)
-      @_max = BinarySearchTree.max(@_root)
-      @_min = BinarySearchTree.min(@_root)
+      Lego::BinarySearchTree.delete(@_root, x)
+      @_max = Lego::BinarySearchTree.max(@_root)
+      @_min = Lego::BinarySearchTree.min(@_root)
     end
 
     # O(1)
@@ -231,17 +231,17 @@ class BinarySearchTree
 
     # O(h)
     def predecessor(x)
-      BinarySearchTree.predecessor(@_root, x)
+      Lego::BinarySearchTree.predecessor(@_root, x)
     end
 
     # O(h)
     def successor(x)
-      BinarySearchTree.successor(@_root, x)
+      Lego::BinarySearchTree.successor(@_root, x)
     end
 
     def to_s
       values = []
-      BinarySearchTree.traverse(@_root) { |v| values << v }
+      Lego::BinarySearchTree.traverse(@_root) { |v| values << v }
       values.join " -> "
     end
   end

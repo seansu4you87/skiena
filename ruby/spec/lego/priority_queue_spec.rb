@@ -1,7 +1,7 @@
 require 'spec_helper'
 
-describe PriorityQueue do
-  let(:pq) { PriorityQueue.new }
+describe Lego::PriorityQueue do
+  let(:pq) { Lego::PriorityQueue.new }
 
   describe "#push" do
     it "pushes" do

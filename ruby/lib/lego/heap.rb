@@ -1,4 +1,4 @@
-class Heap
+class Lego::Heap
   class << self
     def heapify(array); end
     def merge(a, b); end

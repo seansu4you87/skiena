@@ -1,6 +1,6 @@
 require_relative 'heap'
 
-class PriorityQueue
+class Lego::PriorityQueue
   class Node
     attr_reader :key, :value
 
@@ -16,7 +16,7 @@ class PriorityQueue
 
   def initialize(&blk)
     @dominator = blk || (lambda { |a, b| a.key < b.key })
-    @heap = Heap.new(&@dominator)
+    @heap = Lego::Heap.new(&@dominator)
   end
 
   def push(key, value = key)
