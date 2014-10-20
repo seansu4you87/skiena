@@ -7,10 +7,7 @@ module Abacus::InsertionSort
     for i in 1...data.length
       j = i
       while j > 0 && (data[j] < data[j-1]) do
-        tmp = data[j]
-        data[j] = data[j-1]
-        data[j-1] = tmp
-        # puts data.to_s
+        Abacus.swap(data, j, j-1)
         j = j-1
       end
     end
