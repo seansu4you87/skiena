@@ -11,11 +11,21 @@ class Lego::Heap
     @dominator = blk || (lambda { |a,b| a < b })
   end
 
+  def insert(key)
+    # append to the end of the array, bubble up
+    @data[@size + 1] = key
+    @size += 1
+    bubble_up(@size)
+  end
+  alias_method :<<, :insert
+
   def peek
     @data[1]
   end
 
   def extract
+    return nil if @size == 0
+
     dom = @data[1]
     @data[1] = @data[@size]
     @data[@size] = nil
@@ -24,13 +34,6 @@ class Lego::Heap
 
     bubble_down(1)
     dom
-  end
-
-  def insert(key)
-    # append to the end of the array, bubble up
-    @data[@size + 1] = key
-    @size += 1
-    bubble_up(@size)
   end
 
   def size

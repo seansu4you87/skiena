@@ -16,6 +16,8 @@ describe Lego::Heap do
   describe "#extract" do
     it "extracts the most dominant member" do
       h = Lego::Heap.new
+      expect(h.extract).to eql nil
+
       h.insert 5
       h.insert 3
       h.insert 4
