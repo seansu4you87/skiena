@@ -4,9 +4,7 @@ require_relative 'analysis'
 require_relative '../lib/abacus'
 require_relative '../lib/lego'
 
-# BENCHMARK!!!
-
-sizes = [
+tens = [
   10,
   100,
   1_000,
@@ -14,26 +12,28 @@ sizes = [
   100_000,
   1_000_000,
   10_000_000,
-  # 100_000_000,
+  100_000_000,
 ]
+
+twos = [
+  2, 4, 8, 16, 32, 64, 128, 256, 512,
+  1_024, 2_048, 4_096, 8_192, 16_384,
+  32_768, 65_536, 131_072, 262_144, 524_288,
+  1_048_576, 2_097_152, 4_194_304, 8_388_608,
+  16_777_216, 33_554_432,# 67_108_864,
+  # 134_217_728,
+  # 268_435_456,
+]
+
+[tens, twos] # to remove annoying unused variable warnings
 
 def scale(n, sizes)
   sizes.map { |s| n * s }
 end
 
-# Analysis.dictionary_ll.run sizes
-# Analysis.dictionary_bst.run sizes # (1_000_000, 8 sec), (10_000_000, 7 min)
-Analysis.heap.run scale(2, sizes) # (10_000_000, 27 sec), (100_000_000, 4.5 min/270 sec)
-Analysis.heap(heapify: true).run scale(2, sizes)
-# Analysis.priority_queue.run sizes
 
 # TODO(yu): compare specific methods on different Analysis objects
 # method_name = "Insert"
-# ll.run(sizes, method_name)
-# bst.run(sizes, method_name)
+# ll.run(tens, method_name)
+# bst.run(tens, method_name)
 
-# Analysis.ruby_sort.run sizes, silence_creation: true
-# Analysis.heap_sort.run sizes, silence_creation: true
-# Analysis.merge_sort.run sizes, silence_creation: true
-# Analysis.quicksort.run sizes, silence_creation: true
-# Analysis.quicksort(sorted: true).run sizes, silence_creation: true

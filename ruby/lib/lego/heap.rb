@@ -62,14 +62,11 @@ class Lego::Heap
   private
 
   def dominates?(a, b)
+    return true if b.nil?
     @dominator.call(a, b)
   end
 
   def dominant(a, b)
-    return [nil, :none] if a.nil? && b.nil?
-    return [a, :left] if b.nil?
-    return [b, :right] if a.nil?
-
     if dominates?(a, b)
       [a, :left]
     else
@@ -91,21 +88,25 @@ class Lego::Heap
   def bubble_down(index)
     return if index >= @size
 
-    left = @data[left_child(index)]
-    right = @data[right_child(index)]
+    data_length = @data.length
+    left_index = left_child(index)
+    right_index = right_child(index)
+    return if left_index > data_length && right_index > data_length
+
+    value = @data[index]
+    left = @data[left_index]
+    right = @data[right_index]
+    return if dominates?(value, left) && dominates?(value, right)
+
     dom, side = dominant(left, right)
-
-    return if dom.nil? && side == :none
-
-    if dominates?(dom, @data[index])
-      tmp = @data[index]
+    if dominates?(dom, value)
       @data[index] = dom
       if side == :left
-        @data[left_child(index)] = tmp
-        bubble_down(left_child(index))
+        @data[left_index] = value
+        bubble_down(left_index)
       else
-        @data[right_child(index)] = tmp
-        bubble_down(right_child(index))
+        @data[right_index] = value
+        bubble_down(right_index)
       end
     end
   end
