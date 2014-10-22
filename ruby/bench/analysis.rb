@@ -90,7 +90,7 @@ class Analysis
         q = sort
       end
 
-      q << Analysis::Method.new("Quicksort", "O(n logn) randomized)") { |array, _| Abacus::Quicksort.sort(array.dup) }
+      q << Analysis::Method.new("Quicksort", "O(n logn) randomized first!") { |array, _| Abacus::Quicksort.sort(array.dup) }
       q
     end
 

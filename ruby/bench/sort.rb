@@ -8,9 +8,11 @@ require_relative 'benchmark'
 # The native ruby sort (quicksort implemented in c) is way faster though
 # Quicksort on the worst case (already sorted) is terrible
 
-Analysis.ruby_sort.run tens, silence_creation: true
-Analysis.quicksort.run tens, silence_creation: true
-Analysis.heap_sort.run tens, silence_creation: true
-Analysis.merge_sort.run tens, silence_creation: true
+TWOS = TWOS.first 15
 
-Analysis.quicksort(sorted: true).run tens, silence_creation: true
+# Analysis.ruby_sort.run TWOS, silence_creation: true
+Analysis.quicksort.run TWOS, silence_creation: true
+# Analysis.heap_sort.run TWOS, silence_creation: true
+# Analysis.merge_sort.run TWOS, silence_creation: true
+
+Analysis.quicksort(sorted: true).run TWOS, silence_creation: true
