@@ -99,6 +99,12 @@ class Analysis
       r << Analysis::Method.new("Ruby's Sort", "O(n logn)") { |array, _| array.dup.sort }
       r
     end
+
+    def bubble_sort
+      b = sort
+      b << Analysis::Method.new("Bubble Sort", "O(n^2)") { |array, _| Abacus::BubbleSort.sort(array.dup) }
+      b
+    end
   end
 
   class Method

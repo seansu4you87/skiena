@@ -14,5 +14,6 @@ TWOS = TWOS.first 15
 Analysis.quicksort.run TWOS, silence_creation: true
 # Analysis.heap_sort.run TWOS, silence_creation: true
 # Analysis.merge_sort.run TWOS, silence_creation: true
+Analysis.bubble_sort.run TWOS, silence_creation: true
 
 Analysis.quicksort(sorted: true).run TWOS, silence_creation: true
