@@ -1,7 +1,7 @@
 class Lego::Heap
   def initialize(data = nil, &blk)
     @size = 0
-    @dominator = blk || (lambda { |a,b| a < b })
+    @dominator = blk || (lambda { |a,b| a < b }) # min heap defaults
     @data = []
 
     if !data.nil? && !data.empty?
@@ -37,11 +37,18 @@ class Lego::Heap
     return nil if @size == 0
 
     dom = @data[1]
+
+    # put last element in root
     @data[1] = @data[@size]
     @data[@size] = nil
+
+    # I don't know why this is here, perhaps because of a bug?
+    # Or maybe it's someone adding nil
     @data.pop if @data.last.nil?
     @size -= 1
 
+    # bubble the last element (put in the root position) down until the heap is
+    # correct
     bubble_down(1)
     dom
   end
