@@ -4,6 +4,8 @@ require_relative 'benchmark'
 # Analysis.heap(heapify: true).run scale(2, tens)
 # Analysis.priority_queue.run tens
 
+twos = TWOS
+
 # Heapify vs Naive analysis
 Analysis.new(Lego::Heap, "heapify sorted"){ |heap, size| heap.send(:heapify, (1...size).to_a) }.run twos
 Analysis.new(Lego::Heap, "heapify random"){ |heap, size| heap.send(:heapify, (1...size).to_a.shuffle) }.run twos
